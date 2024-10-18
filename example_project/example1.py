@@ -1,10 +1,4 @@
-from fastapi import FastAPI
-from apispark.routers.router import Router
-
-app = FastAPI()
-
-# Initialize apispark Router
-router = Router()
+from apispark.app import ApiSparkApp
 
 # Developer's route functions
 async def get_users():
@@ -22,10 +16,10 @@ async def put_user(user_id: int):
 async def delete_user(user_id: int):
     return {"message": f"Deleting user with ID {user_id}"}
 
-# Register routes from this module
-router.register_routes(globals())
+# Create an ApiSparkApp instance and pass the module globals for route detection
+app_instance = ApiSparkApp(globals())
 
-# Include the router in the FastAPI app
-router.include_in_app(app)
+# Get the FastAPI app instance
+app = app_instance.get_app()
 
-# Run the app with `uvicorn example_project.app:app --reload`
+# Run with `uvicorn example_project.app:app --reload`
