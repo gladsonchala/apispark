@@ -1,7 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from .routers.router import Router
 from .middleware import MiddlewareManager
+from .exceptions.exception_handler import custom_exception_handler, http_exception_handler
 
 class ApiSparkApp:
     """
@@ -16,6 +17,9 @@ class ApiSparkApp:
         self.router.register_routes(module_globals)
         self.middleware_manager.register_middlewares(self.app)  # Register middleware
         self._add_health_check()
+
+        # Register custom exception handlers
+        self._register_exception_handlers()
 
     def include_router(self):
         """
@@ -38,3 +42,10 @@ class ApiSparkApp:
         @self.app.get("/health", tags=["Health"])
         async def health_check():
             return JSONResponse(content={"status": "healthy", "message": "API is running properly."})
+
+    def _register_exception_handlers(self):
+        """
+        Register the custom exception handlers.
+        """
+        self.app.add_exception_handler(Exception, custom_exception_handler)
+        self.app.add_exception_handler(HTTPException, http_exception_handler)
