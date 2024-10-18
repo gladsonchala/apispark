@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from .routers.router import Router
+from .middleware import MiddlewareManager
 
 class ApiSparkApp:
     """
@@ -10,8 +11,11 @@ class ApiSparkApp:
     def __init__(self, module_globals):
         self.app = FastAPI()
         self.router = Router()
+        self.middleware_manager = MiddlewareManager()  # Middleware manager instance
+
         self.router.register_routes(module_globals)
-        self._add_health_check()  # Add health check during initialization
+        self.middleware_manager.register_middlewares(self.app)  # Register middleware
+        self._add_health_check()
 
     def include_router(self):
         """
