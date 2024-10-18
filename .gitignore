@@ -1,0 +1,36 @@
+# Python-related files
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+.eggs/
+
+# Virtual environment
+env/
+venv/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Unit test / Coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+*.cover
+.pytest_cache/
+
+# Distribution / packaging
+*.wheel
+dist/
+build/
+
+# Pycharm project settings
+/.idea/
