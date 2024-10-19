@@ -120,6 +120,6 @@ class ApiSparkApp:
                 dependencies = []
 
             # Register the route with the router
-            self.router.add_api_route(path, func, methods=methods, dependencies=dependencies)
+            self.router.router.add_api_route(path, func, methods=methods, dependencies=dependencies)
 
         return decorator
