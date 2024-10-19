@@ -9,6 +9,8 @@ setup(
     url="https://github.com/gladsonchala/apispark",
     packages=find_packages(),  # Automatically find all modules and sub-packages
     install_requires=[
+        "pyjwt",
+        "authlib",
         "fastapi==0.98.0",
         "uvicorn==0.22.0",
         "pydantic==2.1.0",

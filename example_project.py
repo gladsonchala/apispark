@@ -1,25 +1,18 @@
 from apispark.app import ApiSparkApp
+from apispark.auth import Auth
+from pydantic import BaseModel
 
-# Developer's route functions
-async def get_users():
-    return {"message": "Listing all users"}
+app = ApiSparkApp(globals())
+auth = Auth(oauth2=True)
 
-async def post_user():
-    return {"message": "Creating a new user"}
+class Item(BaseModel):
+    name: str
+    price: float
 
-async def get_user_by_id(user_id: int):
-    return {"message": f"Getting user with ID {user_id}"}
+def get_item(item_id: int):
+    return {"item_id": item_id, "name": "Example"}
 
-async def put_user(user_id: int):
-    return {"message": f"Updating user with ID {user_id}"}
+def post_item(item: Item, auth=auth):
+    return {"message": f"Item {item.name} added"}
 
-async def delete_user(user_id: int):
-    return {"message": f"Deleting user with ID {user_id}"}
-
-# Create an ApiSparkApp instance and pass the module globals for route detection
-app_instance = ApiSparkApp(globals())
-
-# Get the FastAPI app instance
-app = app_instance.get_app()
-
-# Run with `uvicorn example_project.app:app --reload`
+app.run()
