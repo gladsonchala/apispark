@@ -1,28 +1,25 @@
 from apispark.app import ApiSparkApp
-from apispark.auth.jwt_auth import JWTAuth
-from pydantic import BaseModel
 
-# Create an instance of the ApiSparkApp class with JWT authentication enabled
-app_instance = ApiSparkApp(globals(), security="jwt", secret="my_secret_key")
+# Developer's route functions
+async def get_users():
+    return {"message": "Listing all users"}
 
-# Get the FastAPI application instance
+async def post_user():
+    return {"message": "Creating a new user"}
+
+async def get_user_by_id(user_id: int):
+    return {"message": f"Getting user with ID {user_id}"}
+
+async def put_user(user_id: int):
+    return {"message": f"Updating user with ID {user_id}"}
+
+async def delete_user(user_id: int):
+    return {"message": f"Deleting user with ID {user_id}"}
+
+# Create an ApiSparkApp instance and pass the module globals for route detection
+app_instance = ApiSparkApp(globals())
+
+# Get the FastAPI app instance
 app = app_instance.get_app()
 
-# Create an instance of the JWTAuth class
-jwt_auth = JWTAuth(secret="my_secret_key")
-
-# Define a Pydantic model for the item data
-class Item(BaseModel):
-    name: str
-    price: float
-
-# Define a route for getting an item by ID
-def get_item(item_id: int):
-    return {"item_id": item_id, "name": "Example"}
-
-# Define a route for adding a new item with authentication required
-# using the security method specified when creating the ApiSparkApp instance
-def post_item(item: Item):
-    return {"message": f"Item {item.name} added"}
-
-
+# Run with `uvicorn example_project:app --reload`
