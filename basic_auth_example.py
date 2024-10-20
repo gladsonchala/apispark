@@ -1,18 +1,22 @@
 from apispark.app import ApiSparkApp
 from pydantic import BaseModel
 
-# Create an instance of the ApiSparkApp class with Basic authentication enabled
+# Create an instance of the ApiSparkApp with Basic authentication
 app_instance = ApiSparkApp(globals(), security="basic", valid_users={"admin": "password"})
 
 # Get the FastAPI application instance
 app = app_instance.get_app()
 
-# Define a Pydantic model for the item data
+# Pydantic model for an item
 class Item(BaseModel):
     name: str
     price: float
 
-# Define a protected route for adding a new item
-@app_instance.route("/items", methods=["POST"], protected=True)
-async def post_item(item: Item):
+# Automatically registered route for fetching all items (open route)
+def get_items():
+    return {"message": "Fetching all items"}
+
+# Automatically registered POST route for adding an item (protected by Basic Auth)
+def post_item(item: Item):
     return {"message": f"Item {item.name} added"}
+post_item.protected = True  # Mark the route as protected by Basic Auth
