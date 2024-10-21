@@ -8,16 +8,13 @@ from apispark.middleware import MiddlewareManager
 from apispark.exceptions.exception_handler import custom_exception_handler, http_exception_handler
 
 class ApiSparkApp:
-    def __init__(self, module_globals, security=None, **kwargs):
+    def __init__(self, security=None, **kwargs):
         self.app = FastAPI()
         self.router = Router()
         self.middleware_manager = MiddlewareManager()
 
         # Initialize Auth based on security type
         self.auth = Auth(security, **kwargs)
-
-        # Register routes automatically
-        self.router.register_routes(module_globals, self.auth)
 
         # Middleware and exception handling setup
         self.middleware_manager.register_middlewares(self.app)

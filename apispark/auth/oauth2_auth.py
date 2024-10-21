@@ -16,23 +16,8 @@ class OAuth2Auth:
         )
         self.app = app
 
-    def login_required(self, f):
-        @wraps(f)
-        async def decorated_function(*args, **kwargs):
-            token = kwargs.get("token") or Request.headers.get("Authorization")
-            if not token:
-                raise HTTPException(status_code=401, detail="Missing token")
-            # Logic to check token with OAuth2 provider can be added here
-            return await f(*args, **kwargs)
-        return decorated_function
-
-# Example usage of the class in a FastAPI app
-app = FastAPI()
-
-oauth2_auth = OAuth2Auth(app)
-
-# Sample protected route (you can define your own routes as needed)
-@app.get("/protected")
-@oauth2_auth.login_required
-async def protected_route(token: str = Depends(OAuth2PasswordBearer(tokenUrl="token"))):
-    return {"message": "This is a protected route"}
+    def login_required(self, token: str = Depends(OAuth2PasswordBearer(tokenUrl="token"))):
+        if not token:
+            raise HTTPException(status_code=401, detail="Missing token")
+        # Logic to check token with OAuth2 provider can be added here
+        return token
