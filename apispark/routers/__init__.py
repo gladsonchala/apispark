@@ -7,6 +7,12 @@ from apispark.auth import Auth
 router = APIRouter()
 
 def register_routes():
+    """
+    Registers routes from other files in the routers directory.
+
+    The function will check if the function name starts with 'get_', 'post_', 'put_', or 'delete_'. 
+    If it does, it will wrap the function with an API key required decorator.
+    """
     routers_directory = os.path.dirname(__file__)
     for filename in os.listdir(routers_directory):
         if filename.endswith(".py") and filename != "__init__.py":

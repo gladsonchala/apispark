@@ -9,6 +9,24 @@ from .jwt_auth import JWTAuth
 
 class Auth:
     def __init__(self, security=None, **kwargs):
+        """
+        Initializes the Auth class with the specified security method.
+
+        Args:
+            security (str, optional): The type of security to use. Options are "oauth2", "apikey", "basic", or "jwt".
+            **kwargs: Additional keyword arguments specific to the chosen security method.
+
+        Attributes:
+            security (str): The type of security method being used.
+            oauth2_auth (OAuth2Auth, optional): Instance managing OAuth2 authentication, if specified.
+            login_required (callable, optional): Function to enforce login for OAuth2 authentication.
+            apikey_auth (APIKeyAuth, optional): Instance managing API Key authentication, if specified.
+            api_key_required (callable, optional): Function to enforce API Key authentication.
+            basic_auth (BasicAuth, optional): Instance managing Basic authentication, if specified.
+            basic_auth_required (callable, optional): Function to enforce Basic authentication.
+            jwt_auth (JWTAuth, optional): Instance managing JWT authentication, if specified.
+            jwt_required (callable, optional): Function to enforce JWT authentication.
+        """
         self.security = security
         if security == "oauth2":
             self.oauth2_auth = OAuth2Auth(
@@ -36,4 +54,19 @@ class Auth:
             self.jwt_required = self.jwt_auth.jwt_required
 
     def basic_auth_required(self, credentials: HTTPBasicCredentials = Security(HTTPBasic())):
+        """
+        Enforces basic authentication for an endpoint.
+
+        This method uses HTTP Basic authentication to verify the provided
+        credentials against a list of valid users. If the credentials
+        are invalid, an HTTPException with a 401 status code is raised.
+
+        Args:
+            credentials (HTTPBasicCredentials, optional): The credentials provided
+            by the client. Defaults to using FastAPI's Security dependency with
+            HTTPBasic.
+
+        Returns:
+            HTTPBasicCredentials: The validated credentials if authentication is successful.
+        """
         return self.basic_auth.basic_auth_required(credentials)
