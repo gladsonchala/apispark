@@ -34,3 +34,6 @@ build/
 
 # Pycharm project settings
 /.idea/
+.idx/
+/.idx/
+*.nix
