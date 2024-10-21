@@ -1,14 +1,15 @@
-import jwt
-from functools import wraps
+from jose import JWTError, jwt
 from fastapi import Request, HTTPException, Depends
-from fastapi.security import OAuth2AuthorizationCodeBearer
+from fastapi.security import OAuth2PasswordBearer
+from datetime import datetime, timedelta
 
 class JWTAuth:
-    def __init__(self, secret, authorizationUrl=None, tokenUrl=None):
+    def __init__(self, secret, algorithm, authorizationUrl=None, tokenUrl=None):
         self.secret = secret
+        self.algorithm = algorithm
         self.authorizationUrl = authorizationUrl
         self.tokenUrl = tokenUrl
-        self.oauth2_scheme = OAuth2AuthorizationCodeBearer(authorization_url=self.authorizationUrl, token_url=self.tokenUrl)
+        self.oauth2_scheme = OAuth2PasswordBearer(tokenUrl=self.tokenUrl)
 
     def jwt_required(self, token: str = Depends(lambda: self.oauth2_scheme)):
         if not token:
@@ -20,9 +21,17 @@ class JWTAuth:
 
     def decode_token(self, token: str):
         try:
-            payload = jwt.decode(token, self.secret, algorithms=["HS256"])
+            payload = jwt.decode(token, self.secret, algorithms=[self.algorithm])
             return payload
-        except jwt.ExpiredSignatureError:
-            raise HTTPException(status_code=401, detail="Token has expired")
-        except jwt.InvalidTokenError:
-            raise HTTPException(status_code=401, detail="Invalid token")
+        except JWTError:
+            raise HTTPException(status_code=401, detail="Could not validate credentials")
+
+    def create_access_token(self, data: dict, expires_delta: timedelta = None):
+        to_encode = data.copy()
+        if expires_delta:
+            expire = datetime.utcnow() + expires_delta
+        else:
+            expire = datetime.utcnow() + timedelta(minutes=15)
+        to_encode.update({"exp": expire})
+        encoded_jwt = jwt.encode(to_encode, self.secret, algorithm=self.algorithm)
+        return encoded_jwt

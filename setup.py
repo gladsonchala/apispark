@@ -9,7 +9,7 @@ setup(
     url="https://github.com/gladsonchala/apispark",
     packages=find_packages(),  # Automatically find all modules and sub-packages
     install_requires=[
-        "pyjwt",
+        "python-jose[cryptography]",
         "authlib",
         "fastapi==0.98.0",
         "uvicorn==0.22.0",
