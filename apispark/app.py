@@ -12,7 +12,11 @@ class ApiSparkApp:
         self.app = FastAPI()
         self.router = Router()
         self.middleware_manager = MiddlewareManager()
+
+        # Initialize Auth based on security type
         self.auth = Auth(security, **kwargs)
+
+        # Middleware and exception handling setup
         self.middleware_manager.register_middlewares(self.app)
         self._add_health_check()
         self._register_exception_handlers()

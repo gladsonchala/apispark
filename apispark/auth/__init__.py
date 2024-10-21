@@ -1,3 +1,5 @@
+from fastapi import Depends, Security
+from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer, APIKeyHeader
 from .api_key_auth import APIKeyAuth
 from .basic_auth import BasicAuth
 from .jwt_auth import JWTAuth
@@ -27,4 +29,7 @@ class Auth:
             self.api_key_required = self.apikey_auth.api_key_required
         elif security == "basic":
             self.basic_auth = BasicAuth(valid_users=kwargs.get("valid_users"))
-            self.basic_auth_required = self.basic_auth.basic_auth_required
+            self.basic_auth_required = self.basic_auth_required
+
+    def basic_auth_required(self, credentials: HTTPBasicCredentials = Security(HTTPBasic())):
+        return self.basic_auth.basic_auth_required(credentials)
