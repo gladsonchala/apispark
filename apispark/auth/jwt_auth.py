@@ -1,17 +1,15 @@
 from jose import JWTError, jwt
-from fastapi import Request, HTTPException, Depends
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import HTTPException, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from datetime import datetime, timedelta
 
 class JWTAuth:
-    def __init__(self, secret, algorithm, authorizationUrl=None, tokenUrl=None):
+    def __init__(self, secret, algorithm, tokenUrl=None):
         self.secret = secret
         self.algorithm = algorithm
-        self.authorizationUrl = authorizationUrl
         self.tokenUrl = tokenUrl
-        self.oauth2_scheme = OAuth2PasswordBearer(tokenUrl=self.tokenUrl)
 
-    def jwt_required(self, token: str = Depends(lambda: self.oauth2_scheme)):
+    def jwt_required(self, token: str = Depends(OAuth2PasswordRequestForm)):
         if not token:
             raise HTTPException(status_code=401, detail="Missing token")
         token_data = self.decode_token(token)

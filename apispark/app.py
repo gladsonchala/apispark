@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,6 +20,13 @@ class ApiSparkApp:
         self.middleware_manager.register_middlewares(self.app)
         self._add_health_check()
         self._register_exception_handlers()
+
+        # Register all routers
+        self.router.include_in_app(self.app)
+
+        # Add security scheme to OpenAPI
+        if security == "jwt":
+            self.app.openapi_schema = self._custom_openapi()
 
     def get_app(self):
         return self.app
@@ -44,3 +51,26 @@ class ApiSparkApp:
 
     def serve_static(self, path, directory):
         self.app.mount(path, StaticFiles(directory=directory), name="static")
+
+    def _custom_openapi(self):
+        if self.app.openapi_schema:
+            return self.app.openapi_schema
+        openapi_schema = self.app.openapi()
+        
+        # Ensure 'components' is initialized
+        if "components" not in openapi_schema:
+            openapi_schema["components"] = {}
+        if "securitySchemes" not in openapi_schema["components"]:
+            openapi_schema["components"]["securitySchemes"] = {}
+
+        openapi_schema["components"]["securitySchemes"]["OAuth2PasswordBearer"] = {
+            "type": "oauth2",
+            "flows": {
+                "password": {
+                    "tokenUrl": self.auth.jwt_auth.tokenUrl
+                }
+            }
+        }
+        openapi_schema["security"] = [{"OAuth2PasswordBearer": []}]
+        self.app.openapi_schema = openapi_schema
+        return self.app.openapi_schema
