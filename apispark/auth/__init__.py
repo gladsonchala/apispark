@@ -2,21 +2,12 @@ from fastapi import Depends, Security
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer, APIKeyHeader
 from .api_key_auth import APIKeyAuth
 from .basic_auth import BasicAuth
-from .jwt_auth import JWTAuth
 from .oauth2_auth import OAuth2Auth
 
 class Auth:
     def __init__(self, security=None, **kwargs):
         self.security = security
-        if security == "jwt":
-            self.jwt_auth = JWTAuth(
-                secret=kwargs.get("secret"),
-                algorithm=kwargs.get("algorithm"),
-                authorizationUrl=kwargs.get("authorizationUrl"),
-                tokenUrl=kwargs.get("tokenUrl")
-            )
-            self.jwt_required = self.jwt_auth.jwt_required
-        elif security == "oauth2":
+        if security == "oauth2":
             self.oauth2_auth = OAuth2Auth(
                 app=kwargs.get("app"),
                 provider=kwargs.get("provider"),

@@ -14,7 +14,8 @@ setup(
         "fastapi==0.98.0",
         "uvicorn==0.22.0",
         "pydantic==2.1.0",
-        "pytest==7.4.0"
+        "pytest==7.4.0",
+        "httpx"
     ],
     entry_points={
         'console_scripts': [

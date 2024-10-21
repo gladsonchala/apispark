@@ -2,5 +2,6 @@ fastapi
 uvicorn
 pydantic
 pytest
-pyjwt
 authlib
+python-jose[cryptography]
+httpx

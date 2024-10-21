@@ -24,10 +24,6 @@ class ApiSparkApp:
         # Register all routers
         self.router.include_in_app(self.app)
 
-        # Add security scheme to OpenAPI
-        if security == "jwt":
-            self.app.openapi_schema = self._custom_openapi()
-
     def get_app(self):
         return self.app
 
@@ -51,26 +47,3 @@ class ApiSparkApp:
 
     def serve_static(self, path, directory):
         self.app.mount(path, StaticFiles(directory=directory), name="static")
-
-    def _custom_openapi(self):
-        if self.app.openapi_schema:
-            return self.app.openapi_schema
-        openapi_schema = self.app.openapi()
-        
-        # Ensure 'components' is initialized
-        if "components" not in openapi_schema:
-            openapi_schema["components"] = {}
-        if "securitySchemes" not in openapi_schema["components"]:
-            openapi_schema["components"]["securitySchemes"] = {}
-
-        openapi_schema["components"]["securitySchemes"]["OAuth2PasswordBearer"] = {
-            "type": "oauth2",
-            "flows": {
-                "password": {
-                    "tokenUrl": self.auth.jwt_auth.tokenUrl
-                }
-            }
-        }
-        openapi_schema["security"] = [{"OAuth2PasswordBearer": []}]
-        self.app.openapi_schema = openapi_schema
-        return self.app.openapi_schema
