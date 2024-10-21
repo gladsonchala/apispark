@@ -8,8 +8,8 @@ class Auth:
         self.security = security
         if security == "jwt":
             self.jwt_auth = JWTAuth(
-                secret=kwargs.get("secret", "default_secret"),
-                algorithm=kwargs.get("algorithm", "HS256"),
+                secret=kwargs.get("secret"),
+                algorithm=kwargs.get("algorithm"),
                 authorizationUrl=kwargs.get("authorizationUrl"),
                 tokenUrl=kwargs.get("tokenUrl")
             )
@@ -17,14 +17,14 @@ class Auth:
         elif security == "oauth2":
             self.oauth2_auth = OAuth2Auth(
                 app=kwargs.get("app"),
-                provider=kwargs.get("provider", "google"),
+                provider=kwargs.get("provider"),
                 client_id=kwargs.get("client_id"),
                 client_secret=kwargs.get("client_secret")
             )
             self.login_required = self.oauth2_auth.login_required
         elif security == "apikey":
-            self.apikey_auth = APIKeyAuth(valid_keys=kwargs.get("valid_keys", ["default_key"]))
+            self.apikey_auth = APIKeyAuth(valid_keys=kwargs.get("valid_keys"))
             self.api_key_required = self.apikey_auth.api_key_required
         elif security == "basic":
-            self.basic_auth = BasicAuth(valid_users=kwargs.get("valid_users", {"admin": "password"}))
+            self.basic_auth = BasicAuth(valid_users=kwargs.get("valid_users"))
             self.basic_auth_required = self.basic_auth.basic_auth_required

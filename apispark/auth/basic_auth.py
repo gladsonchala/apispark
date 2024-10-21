@@ -3,7 +3,7 @@ from functools import wraps
 import base64
 
 class BasicAuth:
-    def __init__(self, valid_users={"admin": "password"}):
+    def __init__(self, valid_users):
         self.valid_users = valid_users
 
     def basic_auth_required(self, auth: str = Header(None)):

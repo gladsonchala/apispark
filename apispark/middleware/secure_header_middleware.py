@@ -8,4 +8,3 @@ class SecureHeadersMiddleware(BaseHTTPMiddleware):
         response.headers['X-Frame-Options'] = 'DENY'
         response.headers['X-Content-Type-Options'] = 'nosniff'
         return response
-
