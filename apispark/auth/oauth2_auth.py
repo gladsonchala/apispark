@@ -4,15 +4,15 @@ from authlib.integrations.starlette_client import OAuth
 from functools import wraps
 
 class OAuth2Auth:
-    def __init__(self, app: FastAPI, provider, client_id, client_secret):
+    def __init__(self, app: FastAPI, provider, client_id, client_secret, authorize_url, access_token_url, client_kwargs):
         self.oauth = OAuth()
         self.oauth.register(
             name=provider,
             client_id=client_id,
             client_secret=client_secret,
-            access_token_url=f'https://{provider}.com/oauth/token',
-            authorize_url=f'https://{provider}.com/oauth/authorize',
-            client_kwargs={"scope": "openid email profile"},
+            access_token_url=access_token_url,
+            authorize_url=authorize_url,
+            client_kwargs=client_kwargs,
         )
         self.app = app
 

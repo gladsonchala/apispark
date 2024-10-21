@@ -6,7 +6,10 @@ app_instance = ApiSparkApp(
     security="oauth2",
     provider="google",
     client_id="your_google_client_id",
-    client_secret="your_google_client_secret"
+    client_secret="your_google_client_secret",
+    authorize_url="https://accounts.google.com/o/oauth2/auth",
+    access_token_url="https://oauth2.googleapis.com/token",
+    client_kwargs={"scope": "openid email profile"}
 )
 app = app_instance.get_app()
 

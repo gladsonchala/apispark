@@ -21,7 +21,10 @@ class Auth:
                 app=kwargs.get("app"),
                 provider=kwargs.get("provider"),
                 client_id=kwargs.get("client_id"),
-                client_secret=kwargs.get("client_secret")
+                client_secret=kwargs.get("client_secret"),
+                authorize_url=kwargs.get("authorize_url"),
+                access_token_url=kwargs.get("access_token_url"),
+                client_kwargs=kwargs.get("client_kwargs", {"scope": "openid email profile"})
             )
             self.login_required = self.oauth2_auth.login_required
         elif security == "apikey":
