@@ -1,3 +1,5 @@
+# File: /jwt_auth_example.py
+
 from apispark.app import ApiSparkApp
 from pydantic import BaseModel
 from fastapi import Depends
@@ -12,8 +14,7 @@ app_instance = ApiSparkApp(
     security="jwt",
     secret=SECRET_KEY,
     algorithm=ALGORITHM,
-    authorizationUrl="your_authorization_url",
-    tokenUrl="your_token_url"
+    access_token_expire_minutes=ACCESS_TOKEN_EXPIRE_MINUTES
 )
 app = app_instance.get_app()
 

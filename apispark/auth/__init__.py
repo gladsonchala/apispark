@@ -1,8 +1,11 @@
+# File: /apispark/auth/__init__.py
+
 from fastapi import Depends, Security
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer, APIKeyHeader
 from .api_key_auth import APIKeyAuth
 from .basic_auth import BasicAuth
 from .oauth2_auth import OAuth2Auth
+from .jwt_auth import JWTAuth
 
 class Auth:
     def __init__(self, security=None, **kwargs):
@@ -24,6 +27,13 @@ class Auth:
         elif security == "basic":
             self.basic_auth = BasicAuth(valid_users=kwargs.get("valid_users"))
             self.basic_auth_required = self.basic_auth_required
+        elif security == "jwt":
+            self.jwt_auth = JWTAuth(
+                secret_key=kwargs.get("secret"),
+                algorithm=kwargs.get("algorithm"),
+                access_token_expire_minutes=kwargs.get("access_token_expire_minutes", 30)
+            )
+            self.jwt_required = self.jwt_auth.jwt_required
 
     def basic_auth_required(self, credentials: HTTPBasicCredentials = Security(HTTPBasic())):
         return self.basic_auth.basic_auth_required(credentials)
