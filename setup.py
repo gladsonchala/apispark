@@ -4,10 +4,10 @@ setup(
     name="apispark",
     version="0.1.0",
     description="A lightweight Python framework for building fast, scalable APIs.",
-    author="Your Name",
+    author="Gemechis Chala",
     author_email="gladsonchala@gmail.com",
     url="https://github.com/gladsonchala/apispark",
-    packages=find_packages(),  # Automatically find all modules and sub-packages
+    packages=find_packages(),
     install_requires=[
         "python-jose[cryptography]",
         "authlib",
@@ -19,7 +19,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'apispark=apispark.app:main',  # Entry point for the app
+            'apispark=apispark.app:main',
         ]
     },
     classifiers=[
